@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Managemen</title>
+    <link rel="stylesheet" href="css/export.css">
+    <script src="js/export.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="content" id="content">
+        <h2>Export Management</h2>
+        <button onclick="openAddExportModal()">Add Export Record</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Export Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="export-list">
+                <!-- Export records will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="js/export.js"></script>
+</body>
+</html>

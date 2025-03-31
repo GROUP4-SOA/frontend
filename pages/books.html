@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link rel="stylesheet" href="css/books.css">
+    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="content" id="content">
+        <h2>Book Management</h2>
+        <label for="category-filter">Filter by category: </label>
+        <select id="category-filter" onchange="filterBooks()">
+            <option value="all">All</option>
+        </select>
+        <button onclick="openAddBookModal()">Add Book</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Book Name</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="book-list">
+                <!-- Book list will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="js/book.js"></script>
+</body>
+</html>

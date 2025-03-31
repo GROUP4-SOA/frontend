@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Warehouse Management</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Book Warehouse Management</h2>
+        <ul>
+            <li><a href="#dashboard" class="nav-link" id="dashboard-link"><i class="fa-solid fa-home"></i> Dashboard</a></li>
+            <li><a href="#admin" class="nav-link" id="admin-link"><i class="fa-solid fa-user"></i> Account Management</a></li>
+            <li><a href="#books" class="nav-link" id="books-link"><i class="fa-solid fa-book"></i> Book Management</a></li>
+            <li><a href="#import" class="nav-link" id="import-link"><i class="fa-solid fa-download"></i> Warehouse Import</a></li>
+            <li><a href="#export" class="nav-link" id="export-link"><i class="fa-solid fa-upload"></i> Warehouse Export</a></li>
+        </ul>
+        <!-- Logout button at the bottom -->
+        <a href="#" id="logout-btn"><i class="fa-solid fa-sign-out-alt"></i> Log Out</a>
+    </div>
+    
+    <div class="content" id="content">
+        <div class="chart-container">
+            <div class="chart-box">
+                <h3>Number of Books Imported by Month</h3>
+                <canvas id="importChart"></canvas>
+            </div>
+        
+            <div class="chart-box">
+                <h3>Warehouse Export Trends by Month</h3>
+                <canvas id="exportChart"></canvas>
+            </div>
+        
+            <div class="chart-box full-width">
+                <h3>Book Category Distribution</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

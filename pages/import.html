@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Management</title>
+    <link rel="stylesheet" href="css/import.css">
+    <script src="js/import.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="content" id="content">
+        <h2>Import Management</h2>
+        <button onclick="openAddImportModal()">Add Import Record</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Import Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="import-list">
+                <!-- Import records will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
