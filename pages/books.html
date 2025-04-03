@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Management</title>
-    <link rel="stylesheet" href="css/books.css">
-    <script src="js/script.js" defer></script>
+    <!-- Liên kết favicon -->
+    <link rel="icon" type="image/x-icon" href="../image/warehouse.svg">
+    <link rel="stylesheet" href="../css/books.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
+
 <body>
     <div class="content" id="content">
         <h2>Book Management</h2>
@@ -20,9 +23,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Book Name</th>
+                    <th>Title</th>
                     <th>Author</th>
-                    <th>Isbn</th>
                     <th>Price</th>
                     <th>Quantities</th>
                     <th>Category</th>
@@ -33,6 +35,36 @@
             </tbody>
         </table>
     </div>
-    <script src="js/book.js"></script>
+    <!-- Add Book Modal -->
+    <div id="add-book-modal" class="modal">
+        <h3>Add Book</h3>
+        <form onsubmit="handleAddBookSubmit(event)">
+            <input type="text" name="title" placeholder="Title" required />
+            <input type="text" name="author" placeholder="Author" required />
+            <input type="number" name="price" placeholder="Price" required />
+            <input type="number" name="quantity" placeholder="Quantity" required />
+            <input type="text" name="categoryId" placeholder="Category" required />
+            <button type="submit">Add Book</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+        </form>
+    </div>
+
+    <!-- Edit Book Modal -->
+    <div id="edit-book-modal" class="modal">
+        <h3>Edit Book</h3>
+        <form onsubmit="handleEditBookSubmit(event)">
+            <input type="hidden" id="edit-book-id" name="bookId" />
+            <input type="text" id="edit-title" name="title" placeholder="Title" required />
+            <input type="text" id="edit-author" name="author" placeholder="Author" required />
+            <input type="number" id="edit-price" name="price" placeholder="Price" required />
+            <input type="number" id="edit-quantity" name="quantity" placeholder="Quantity" required />
+            <input type="text" id="edit-category" name="categoryId" placeholder="Category" required />
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+        </form>
+    </div>
+    <script src="../config.js"></script>
+    <script src="../js/book.js"></script>
 </body>
+
 </html>

@@ -1,53 +1,157 @@
+// Kiểm tra xem CONFIG đã được load chưa
+console.log("API URL:", CONFIG.API_BASE_URL);
+
+
+// Hàm lấy danh sách sách
+async function fetchBooks() {
+    try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}books`);
+        const books = await response.json();
+
+        const bookListElement = document.getElementById('book-list');
+        bookListElement.innerHTML = ''; // Clear current list
+
+        books.forEach(book => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${book.bookId}</td>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.price}</td>
+                <td>${book.quantity}</td>
+                <td>${book.categoryId}</td>
+                <td>
+                    <button onclick="openEditBookModal('${book.bookId}')">Edit</button>
+                    <button onclick="deleteBook('${book.bookId}')">Delete</button>
+                </td>
+            `;
+            bookListElement.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching books:', error);
+    }
+}
+
+// Hàm thêm sách mới
+async function addBook(bookData) {
+    try {
+        const response = await fetch(API_BASE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookData),
+        });
+        if (response.ok) {
+            fetchBooks(); // Refresh book list
+            alert('Book added successfully!');
+        } else {
+            alert('Failed to add book!');
+        }
+    } catch (error) {
+        console.error('Error adding book:', error);
+    }
+}
+
+// Hàm sửa thông tin sách
+async function updateBook(bookId, bookData) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/${bookId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookData),
+        });
+        if (response.ok) {
+            fetchBooks(); // Refresh book list
+            alert('Book updated successfully!');
+        } else {
+            alert('Failed to update book!');
+        }
+    } catch (error) {
+        console.error('Error updating book:', error);
+    }
+}
+
+// Hàm xóa sách
+async function deleteBook(bookId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/${bookId}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            fetchBooks(); // Refresh book list
+            alert('Book deleted successfully!');
+        } else {
+            alert('Failed to delete book!');
+        }
+    } catch (error) {
+        console.error('Error deleting book:', error);
+    }
+}
+
+// Hàm mở modal thêm sách
 function openAddBookModal() {
-    const bookName = prompt("Enter book name:");
-    const category = prompt("Enter category:");
-    const author = prompt("Enter author:");
-    if (bookName && category && author) {
-        addBook(bookName, category, author);
-    }
+    const modal = document.getElementById('add-book-modal');
+    modal.style.display = 'block';
 }
 
-function addBook(name, category, author) {
-    const table = document.getElementById("book-list");
-    const row = table.insertRow();
-    row.insertCell(0).innerText = table.rows.length;
-    row.insertCell(1).innerText = name;
-    row.insertCell(2).innerText = category;
-    row.insertCell(3).innerText = author;
-    const actions = row.insertCell(4);
-    actions.innerHTML = '<button onclick="editBook(this)">Edit</button> <button onclick="deleteBook(this)">Delete</button>';
-    updateCategoryFilter();
+// Hàm mở modal chỉnh sửa sách
+function openEditBookModal(bookId) {
+    fetch(`${API_BASE_URL}/${bookId}`)
+        .then(response => response.json())
+        .then(book => {
+            const modal = document.getElementById('edit-book-modal');
+            modal.style.display = 'block';
+
+            document.getElementById('edit-book-id').value = book.bookId;
+            document.getElementById('edit-title').value = book.title;
+            document.getElementById('edit-author').value = book.author;
+            document.getElementById('edit-price').value = book.price;
+            document.getElementById('edit-quantity').value = book.quantity;
+            document.getElementById('edit-category').value = book.categoryId;
+        });
 }
 
-function editBook(btn) {
-    const row = btn.parentNode.parentNode;
-    const newName = prompt("Update book name:", row.cells[1].innerText);
-    const newCategory = prompt("Update category:", row.cells[2].innerText);
-    const newAuthor = prompt("Update author:", row.cells[3].innerText);
-    if (newName && newCategory && newAuthor) {
-        row.cells[1].innerText = newName;
-        row.cells[2].innerText = newCategory;
-        row.cells[3].innerText = newAuthor;
-        updateCategoryFilter();
-    }
+// Hàm đóng modal
+function closeModal() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => modal.style.display = 'none');
 }
 
-function deleteBook(btn) {
-    if (confirm("Are you sure you want to delete this book?")) {
-        btn.parentNode.parentNode.remove();
-    }
+// Hàm thêm sách từ modal
+function handleAddBookSubmit(event) {
+    event.preventDefault();
+    
+    const bookData = {
+        title: event.target.title.value,
+        author: event.target.author.value,
+        price: parseFloat(event.target.price.value),
+        categoryId: event.target.categoryId.value,
+        quantity: parseInt(event.target.quantity.value),
+    };
+
+    addBook(bookData);
+    closeModal();
 }
 
-function updateCategoryFilter() {
-    const categories = new Set();
-    document.querySelectorAll("#book-list tr td:nth-child(3)").forEach(td => categories.add(td.innerText));
-    const filter = document.getElementById("category-filter");
-    filter.innerHTML = '<option value="all">All</option>' + Array.from(categories).map(cat => `<option value="${cat}">${cat}</option>`).join('');
+// Hàm cập nhật sách từ modal
+function handleEditBookSubmit(event) {
+    event.preventDefault();
+
+    const bookId = event.target.bookId.value;
+    const bookData = {
+        title: event.target.title.value,
+        author: event.target.author.value,
+        price: parseFloat(event.target.price.value),
+        categoryId: event.target.categoryId.value,
+        quantity: parseInt(event.target.quantity.value),
+    };
+
+    updateBook(bookId, bookData);
+    closeModal();
 }
 
-function filterBooks() {
-    const selectedCategory = document.getElementById("category-filter").value;
-    document.querySelectorAll("#book-list tr").forEach(row => {
-        row.style.display = (selectedCategory === "all" || row.cells[2].innerText === selectedCategory) ? "" : "none";
-    });
-}
+// Gọi hàm lấy danh sách sách khi trang được tải
+window.onload = fetchBooks;
