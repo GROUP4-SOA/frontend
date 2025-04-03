@@ -87,3 +87,10 @@ body {
     height: 50px;
     opacity: 0.5;
 }
+.error-message {
+    color: #ff0000;
+    margin: 10px 0;
+    text-align: center;
+    display: none;
+    font-size: 14px;
+}
