@@ -12,56 +12,57 @@
                 loadPage(page);
             }
 
+            // Cập nhật class active
             document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
             this.classList.add("active");
         });
     });
 });
 
-async function loadPage(page) {
-    try {
-        // Tải nội dung HTML của trang con
-        const response = await fetch(`pages/${page}.html`);
-        const html = await response.text();
-        document.getElementById("content").innerHTML = html;
+// Navigation handling
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('href').replace('#', '');
+            
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Handle navigation based on clicked link
+            switch(page) {
+                case 'dashboard':
+                    window.location.href = 'Dashboard.html';
+                    break;
+                case 'admin':
+                    window.location.href = 'admin.html';
+                    break;
+                case 'books':
+                    window.location.href = 'books.html';
+                    break;
+                case 'import':
+                    window.location.href = 'import.html';
+                    break;
+                case 'export':
+                    window.location.href = 'export.html';
+                    break;
+            }
+        });
+    });
 
-        // Xóa CSS cũ nếu có
-        document.querySelectorAll("link[data-dynamic-css]").forEach(link => link.remove());
-
-        // Thêm CSS mới nếu có
-        const cssFile = `css/${page}.css`;
-        fetch(cssFile, { method: "HEAD" })  // Kiểm tra file có tồn tại không
-            .then(res => {
-                if (res.ok) {
-                    const link = document.createElement("link");
-                    link.rel = "stylesheet";
-                    link.href = cssFile;
-                    link.setAttribute("data-dynamic-css", "true");
-                    document.head.appendChild(link);
-                }
-            });
-
-        // Xóa JS cũ nếu có
-        document.querySelectorAll("script[data-dynamic-js]").forEach(script => script.remove());
-
-        // Thêm JS mới nếu có
-        const jsFile = `js/${page}.js`;
-        fetch(jsFile, { method: "HEAD" })  // Kiểm tra file có tồn tại không
-            .then(res => {
-                if (res.ok) {
-                    const script = document.createElement("script");
-                    script.src = jsFile;
-                    script.setAttribute("data-dynamic-js", "true");
-                    document.body.appendChild(script);
-                }
-            });
-
-    } catch (error) {
-        console.error("Error loading page:", error);
-        document.getElementById("content").innerHTML = "<p>Error loading content.</p>";
-    }
-}
-
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Clear localStorage
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = '../index.html';
+    });
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     // Sample data

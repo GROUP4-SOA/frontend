@@ -4,36 +4,141 @@ body {
     margin: 0;
     display: flex;
 }
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    
+}
+.sidebar h2 {
+    text-align: center;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    margin: 10px 0;
+}
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.sidebar ul li a.active {
+    background-color: #555;
+    border-radius: 5px;
+}
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+
+/* Nút Đăng xuất */
+#logout-btn {
+    
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin-top: 400px;
+    background-color: #d9534f;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#logout-btn:hover {
+    background-color: #c9302c;
+}
 .content {
     flex: 1;
     padding: 20px;
     background-color: white;
-    margin-left: 180px;
+    margin-left: 280px; /* Đảm bảo content không bị che bởi sidebar */
     width: calc(100% - 250px);
     box-sizing: border-box;
 }
+/* Table */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 table, th, td {
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
 }
+
 th, td {
-    padding: 10px;
+    padding: 12px;
     text-align: left;
 }
+
+th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Buttons */
+
 button {
-    padding: 5px 10px;
+    width:90px;
+    padding: 8px 12px;
     margin: 5px;
     border: none;
-    background-color: #333;
+    border-radius: 5px;
     color: white;
     cursor: pointer;
+    transition: background 0.3s;
 }
-button:hover {
-    background-color: #070808;
+/* CSS for buttons */
+.edit-btn {
+    background-color: #4CAF50; /* Màu xanh lá */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #45a049; /* Màu xanh lá đậm khi hover */
+}
+
+.delete-btn {
+    background-color: #f44336; /* Màu đỏ */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #e53935; /* Màu đỏ đậm khi hover */
+}
+
+.add-btn {
+    background-color: #27ae60;
+}
+
+.add-btn:hover {
+    background-color: #219150;
 }
 /* Styles for the modal */
 .modal {
