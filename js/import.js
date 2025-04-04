@@ -1,40 +1,197 @@
-function openAddImportModal() {
-    const productName = prompt("Enter product name:");
-    const quantity = prompt("Enter quantity:");
-    const importDate = prompt("Enter import date (YYYY-MM-DD):");
-    if (productName && quantity && importDate) {
-        addImport(productName, quantity, importDate);
+// Kiểm tra URL cấu hình
+console.log("API URL:", CONFIG.API_BASE_URL);
+
+// Hàm tải danh sách phiếu nhập
+async function loadImports() {
+    try {
+        const [importResponse, booksResponse, usersResponse] = await Promise.all([
+            fetch(`${CONFIG.API_BASE_URL}imports`),
+            fetch(`${CONFIG.API_BASE_URL}books`),
+            fetch(`${CONFIG.API_BASE_URL}auth/users`)
+        ]);
+
+        if (!importResponse.ok || !booksResponse.ok || !usersResponse.ok) {
+            throw new Error('Failed to fetch data');
+        }
+
+        const imports = await importResponse.json();
+        const books = await booksResponse.json();
+        const users = await usersResponse.json();
+
+        const bookMap = {};
+        books.forEach(book => {
+            bookMap[book.bookId] = book.title;
+        });
+
+        const userMap = {};
+        users.forEach(user => {
+            userMap[user.userId] = user.fullName;
+        });
+
+        const importList = document.getElementById("import-list");
+        importList.innerHTML = '';
+
+        imports.forEach(WarehouseImport => {
+            const row = document.createElement('tr');
+
+            const bookDetails = WarehouseImport.warehouseImportBooks.map(book => {
+                const title = bookMap[book.bookId] || "Unknown Title";
+                return `<div><strong>${title}</strong></div><hr style="margin: 4px 0;">`;
+            }).join('');
+
+            const importQuantities = WarehouseImport.warehouseImportBooks
+                .map(book => book.importQuantity)
+                .join('<hr style="margin: 4px 0;">');
+
+            const prices = WarehouseImport.warehouseImportBooks
+                .map(book => book.price)
+                .join('<hr style="margin: 4px 0;">');
+
+            const importerName = userMap[WarehouseImport.userId] || "Unknown User";
+
+            row.innerHTML = `
+                <td>${WarehouseImport.importId}</td>
+                <td>${bookDetails}</td>
+                <td>${importQuantities}</td>
+                <td>${prices}</td>
+                <td>${importerName}</td>
+                <td>${new Date(WarehouseImport.importDate).toLocaleDateString()}</td>
+            `;
+
+            importList.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Error loading imports:', error);
     }
 }
 
-function addImport(productName, quantity, importDate) {
-    const table = document.getElementById("import-list");
-    const row = table.insertRow();
-    row.insertCell(0).innerText = table.rows.length;
-    row.insertCell(1).innerText = productName;
-    row.insertCell(2).innerText = quantity;
-    row.insertCell(3).innerText = importDate;
-    const actions = row.insertCell(4);
-    actions.innerHTML = '<button onclick="editImport(this)">Edit</button> <button onclick="deleteImport(this)">Delete</button>';
-}
+// Hàm mở modal thêm phiếu nhập
+window.openAddImportModal = async function () {
+    const [booksResponse, usersResponse] = await Promise.all([
+        fetch(`${CONFIG.API_BASE_URL}books`),
+        fetch(`${CONFIG.API_BASE_URL}auth/users`)
+    ]);
 
-function editImport(btn) {
-    const row = btn.parentNode.parentNode;
-    const newProductName = prompt("Update product name:", row.cells[1].innerText);
-    const newQuantity = prompt("Update quantity:", row.cells[2].innerText);
-    const newImportDate = prompt("Update import date (YYYY-MM-DD):", row.cells[3].innerText);
-    if (newProductName && newQuantity && newImportDate) {
-        row.cells[1].innerText = newProductName;
-        row.cells[2].innerText = newQuantity;
-        row.cells[3].innerText = newImportDate;
-    }
-}
+    const books = await booksResponse.json();
+    const users = await usersResponse.json();
 
-function deleteImport(btn) {
-    if (confirm("Are you sure you want to delete this import record?")) {
-        btn.parentNode.parentNode.remove();
-    }
-}
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Import Record</h2>
+            <form id="add-import-form">
+                <label for="book-id">Book IDs</label>
+                <select id="book-id" name="book-ids[]" multiple required style="height: 120px;">
+                ${books.map(book => `   
+                    <option value="${book.bookId}">
+                        ${book.bookId} - ${book.title} (Stock: ${book.quantity})
+                    </option>`).join('')}
+                </select>
+
+                <div id="book-details-container"></div>
+
+                <label for="user-id">Importer ID</label>
+                <select id="user-id" name="user-id" required>
+                    <option value="">-- Select User ID --</option>
+                    ${users.map(user => `<option value="${user.userId}">${user.userId} - ${user.fullName}</option>`).join('')}
+                </select>
+
+                <label for="import-date">Import Date</label>
+                <input type="date" id="import-date" name="import-date" required>
+
+                <button class="save-btn" type="submit">Save Import</button>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.style.display = "block";
+
+    const closeButton = modal.querySelector('.close');
+    closeButton.onclick = () => { modal.remove(); };
+    window.onclick = (e) => {
+        if (e.target === modal) modal.remove();
+    };
+
+    const bookSelect = modal.querySelector('#book-id');
+    const bookDetailsContainer = modal.querySelector('#book-details-container');
+
+    bookSelect.addEventListener('change', () => {
+        const selectedBookIds = Array.from(bookSelect.selectedOptions).map(opt => opt.value);
+        bookDetailsContainer.innerHTML = '';
+
+        selectedBookIds.forEach(bookId => {
+            const selectedBook = books.find(b => b.bookId === bookId);
+            const price = selectedBook ? selectedBook.price : 0;
+
+            const div = document.createElement('div');
+            div.classList.add('book-detail-row');
+            div.innerHTML = `
+                <h4>Book ID: ${bookId}</h4>
+                <label>Quantity:</label>
+                <input type="number" class="quantity-input" data-bookid="${bookId}" required>
+                <label>Price:</label>
+                <input type="number" class="price-input" value="${price}" data-bookid="${bookId}" required>
+                <hr>
+            `;
+            bookDetailsContainer.appendChild(div);
+        });
+    });
+
+    document.getElementById('add-import-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const importDate = document.getElementById('import-date').value;
+        const userId = document.getElementById('user-id').value;
+
+        const quantities = modal.querySelectorAll('.quantity-input');
+        const prices = modal.querySelectorAll('.price-input');
+
+        const WarehouseImportBooks = Array.from(quantities).map((qtyInput, index) => {
+            const bookId = qtyInput.getAttribute('data-bookid');
+            const quantity = qtyInput.value;
+            const price = prices[index].value;
+
+            return {
+                BookId: bookId,
+                ImportQuantity: quantity,
+                Price: price
+            };
+        });
+
+        const importData = {
+            ImportDate: importDate,
+            UserId: userId,
+            WarehouseImportBooks
+        };
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}imports`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(importData)
+            });
+
+            if (response.ok) {
+                alert('Import added successfully');
+                modal.remove();
+                loadImports();
+            } else {
+                const error = await response.json();
+                alert('Error: ' + error.message);
+            }
+        } catch (error) {
+            console.error('Error adding import:', error);
+            alert('Error adding import');
+        }
+    });
+};
+
+
 //NavigationNavigation
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("import-link").classList.add("active");
@@ -102,5 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Gọi hàm lấy danh sách sách khi trang được tải
-window.onload = fetchBooks;
+// Khởi chạy khi trang load
+window.onload = loadImports;
+

@@ -35,7 +35,7 @@ async function fetchBooks() {
 // Hàm thêm sách mới
 async function addBook(bookData) {
     try {
-        const response = await fetch(CONFIG.API_BASE_URL, {
+        const response = await fetch(`${CONFIG.API_BASE_URL}books`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

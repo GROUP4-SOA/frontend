@@ -104,3 +104,153 @@ button {
     cursor: pointer;
     transition: background 0.3s;
 }
+/* Modal chung */
+/* Nội dung của modal */
+.modal {
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Căn giữa theo cả chiều dọc và chiều ngang */
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    max-width: 90%; /* Đảm bảo modal không vượt quá kích thước màn hình */
+    box-sizing: border-box;
+}
+.modal-content {
+    width: 400px;
+    max-width: 90%;
+    padding: 30px;
+    border-radius: 10px;
+    position: relative;
+}
+/* Close icon */
+.close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.close:hover {
+    color: #333;
+}
+
+/* Tiêu đề */
+.modal-header {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+/* Form */
+.modal form {
+    display: flex;
+    flex-direction: column;
+}
+.modal label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+}
+/* Ô nhập */
+.modal input,
+.modal select {
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+
+.modal input:focus,
+.modal select:focus {
+    border-color: #27ae60;
+    outline: none;
+}
+/* Nút hành động */
+.modal button {
+    background-color: #27ae60;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.modal button:hover {
+    background-color: #219150;
+}
+
+.modal .save-btn {
+    background-color: #28a745;
+}
+
+.modal .save-btn:hover {
+    background-color: #218838;
+}
+
+.modal .close-btn {
+    background-color: #dc3545;
+}
+
+.modal .close-btn:hover {
+    background-color: #c82333;
+}
+
+/* CSS for buttons */
+.edit-btn {
+    background-color: #4CAF50; /* Màu xanh lá */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #45a049; /* Màu xanh lá đậm khi hover */
+}
+
+.delete-btn {
+    background-color: #f44336; /* Màu đỏ */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #e53935; /* Màu đỏ đậm khi hover */
+}
+
+.add-btn {
+    background-color: #27ae60;
+}
+
+.add-btn:hover {
+    background-color: #219150;
+}
+
+/* Hiệu ứng mở modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

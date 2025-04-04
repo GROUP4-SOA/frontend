@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const errorMessage = document.getElementById('errorMessage');
 
     try {
-        const response = await fetch('', {
+        const response = await fetch(`${CONFIG.API_BASE_URL}auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

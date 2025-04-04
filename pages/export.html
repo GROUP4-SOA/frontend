@@ -7,7 +7,6 @@
     <!-- Liên kết favicon -->
     <link rel="icon" type="image/x-icon" href="../image/warehouse.svg">
     <link rel="stylesheet" href="../css/export.css">
-    <script src="js/export.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
@@ -25,16 +24,16 @@
     </div>
     <div class="content" id="content">
         <h2>Export Management</h2>
-        <button onclick="openAddExportModal()">Add Export Record</button>
+        <button class="add-btn" onclick="openAddExportModal()">Add Export Record</button>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Product Name</th>
                     <th>Quantities</th>
-                    <th>Export Date</th>
                     <th>Unit Price</th>
                     <th>Export By</th>
+                    <th>Export Date</th>
                 </tr>
             </thead>
             <tbody id="export-list">
