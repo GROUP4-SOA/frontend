@@ -49,38 +49,40 @@
 ## 📁 Cấu trúc thư mục
 frontend/
 │
-├── index.html                   # Trang đăng nhập chính
+├── index.html                    # Trang đăng nhập chính
 │
-├── pages/                       # Thư mục chứa các trang giao diện
-│   ├── dashboard.html           # Trang Dashboard (báo cáo tổng quan)
-│   ├── admin.html               # Quản lý tài khoản (chỉ dành cho Admin)
-│   ├── books.html               # Quản lý sách
-│   ├── categories.html          # Quản lý danh mục sách
-│   ├── imports.html             # Quản lý nhập kho
-│   ├── exports.html             # Quản lý xuất kho
+├── pages/                         # Thư mục chứa các trang giao diện
+│   ├── dashboard.html             # Trang Dashboard (báo cáo tổng quan)
+│   ├── admin.html                 # Quản lý tài khoản (chỉ dành cho Admin)
+│   ├── books.html                 # Quản lý sách
+│   ├── categories.html            # Quản lý danh mục sách
+│   ├── imports.html               # Quản lý nhập kho
+│   └── export.html                # Quản lý xuất kho
 │
-├── css/                         # Thư mục chứa các file CSS
-│   ├── index.css                # Style cho trang đăng nhập
-│   ├── dashboard.css            # Style cho dashboard
-│   ├── admin.css                # Style cho quản lý tài khoản
-│   ├── book.css                 # Style cho quản lý sách
-│   ├── category.css             # Style cho quản lý danh mục
-│   ├── import.css               # Style cho nhập kho
-│   └── export.css               # Style cho xuất kho
+├── css/                           # Thư mục chứa các file CSS
+│   ├── index.css                  # Style cho trang đăng nhập
+│   ├── dashboard.css              # Style cho dashboard
+│   ├── admin.css                  # Style cho quản lý tài khoản
+│   ├── book.css                   # Style cho quản lý sách
+│   ├── category.css               # Style cho quản lý danh mục
+│   ├── import.css                 # Style cho nhập kho
+│   └── export.css                 # Style cho xuất kho
 │
-├── js/                          # Thư mục chứa các file logic JS
-│   ├── index.js                 # Xử lý đăng nhập, phân quyền
-│   ├── dashboard.js             # Xử lý giao diện dashboard
-│   ├── admin.js                 # Quản lý tài khoản (API, render)
-│   ├── book.js                  # Quản lý sách
-│   ├── category.js              # Quản lý danh mục
-│   ├── import.js                # Quản lý nhập kho
-│   └── export.js                # Quản lý xuất kho
+├── js/                            # Thư mục chứa các file logic JavaScript
+│   ├── index.js                   # Xử lý đăng nhập, phân quyền
+│   ├── dashboard.js               # Xử lý giao diện dashboard
+│   ├── admin.js                   # Quản lý tài khoản (API, render)
+│   ├── book.js                    # Quản lý sách
+│   ├── category.js                # Quản lý danh mục
+│   ├── import.js                  # Quản lý nhập kho
+│   └── export.js                  # Quản lý xuất kho
 │
-├── images/                      # Tài nguyên tĩnh như ảnh, icon
-│   └── (logo.png, icons.svg, ...)
+├── images/                        # Tài nguyên tĩnh như ảnh, icon
+│   └── logo.png                   # Ví dụ: logo của dự án
+│   └── icons.svg                  # Ví dụ: các icon SVG sử dụng trong giao diện
 │
-└── README.md                    # Tài liệu mô tả dự án frontend
+└── README.md                      # Tài liệu mô tả dự án frontend
+                
 
 ## 🚀 Hướng dẫn chạy dự án
 
