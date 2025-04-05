@@ -102,15 +102,21 @@ async function fetchUsers() {
 // Thêm người dùng
 async function addUser(user) {
     try {
-        const response = await fetch(CONFIG.API_BASE_URL + 'auth/users', {
+        // Gửi yêu cầu POST với dữ liệu người dùng
+        const response = await fetch(`${CONFIG.API_BASE_URL}users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify(user), // Chuyển đối tượng thành chuỗi JSON
         });
-        const newUser = await response.json();
-        fetchUsers(); // Refresh the user list
+
+        if (response.ok) {
+            fetchUsers(); // Làm mới danh sách người dùng sau khi thêm
+            alert('User added successfully!');
+        } else {
+            alert('Failed to add user!');
+        }
     } catch (error) {
         console.error('Error adding user:', error);
     }
@@ -148,11 +154,12 @@ async function deleteUser(userId) {
     }
 
     // Nếu user đã bị vô hiệu hóa
-    if (!user.isActive) {
+    if (user.isActive = false) {
         alert("Người dùng đã bị vô hiệu hóa.");
+        console.log("User:", user);
         return;
     }
-
+    
     // Xác nhận trước khi vô hiệu hóa
     const confirmDelete = confirm("Bạn có chắc muốn vô hiệu hóa người dùng này?");
     if (!confirmDelete) return;
@@ -186,7 +193,7 @@ function openEditAccountModal(userId) {
             const modal = document.getElementById('edit-account-modal');
             modal.style.display = 'block';
 
-            d// Điền dữ liệu vào form
+            // Điền dữ liệu vào form
     document.getElementById('userId-edit').value = user.userId;
     document.getElementById('username-edit').value = user.username;
     document.getElementById('fullName-edit').value = user.fullName;
@@ -221,16 +228,23 @@ function closeModal() {
 }
 // Sự kiện gửi form để thêm người dùng
 document.getElementById('add-account-form').addEventListener('submit', function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Ngừng hành động mặc định của form
+
+    // Lấy dữ liệu từ form và chuyển đổi thành đối tượng đúng format
     const user = {
-        FullName: e.target.fullName.value,
-        Username: e.target.username.value,
-        Email: e.target.email.value,
-        PhoneNo: e.target.phone.value,
-        Role: e.target.role.value,
-        IsActive: e.target.isActive.checked
+        username: e.target.username.value,   // Đảm bảo tên trường đúng với API yêu cầu
+        password: e.target.password.value,   // Thêm mật khẩu
+        fullName: e.target.fullName.value,
+        email: e.target.email.value,
+        phoneNo: e.target.phone.value,      // Dùng phoneNo thay vì PhoneNo
+        role: parseInt(e.target.role.value), // Chuyển giá trị role từ string sang number
+        isActive: e.target.isActive.checked  // Dùng .checked để lấy giá trị true/false cho checkbox
     };
+
+    // Gọi hàm thêm người dùng
     addUser(user);
+
+    // Đóng modal sau khi gửi form
     closeModal();
 });
 

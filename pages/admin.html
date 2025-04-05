@@ -59,40 +59,41 @@
         </table>
     </div>
     <!-- Modal for Adding Account -->
-    <div id="add-account-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Add User</h2>
-            <form id="add-account-form">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName-add" name="fullName" required>
+    <!-- Modal for Adding Account -->
+<div id="add-account-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Add User</h2>
+        <form id="add-account-form">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName-add" name="fullName" required>
 
-                <label for="username">Username</label>
-                <input type="text" id="username-add" name="username" required>
+            <label for="username">Username</label>
+            <input type="text" id="username-add" name="username" required>
 
+            <label for="password">Password</label>
+            <input type="password" id="password-edit" name="password" required>
 
-                <label for="password">Password</label>
-                <input type="password" id="password-edit" name="password">
+            <label for="email">Email</label>
+            <input type="email" id="email-add" name="email" required>
 
-                <label for="email">Email</label>
-                <input type="email" id="email-add" name="email" required>
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone-add" name="phone" required>
 
-                <label for="phone">Phone Number</label>
-                <input type="text" id="phone-add" name="phone" required>
+            <label for="role">Role</label>
+            <select id="role-add" name="role">
+                <option value="1">Admin</option>
+                <option value="0">Staff</option>
+            </select>
 
-                <label for="role">Role</label>
-                <select id="role-add" name="role">
-                    <option value="Admin">ADMINISTRATOR</option>
-                    <option value="User">STAFF</option>
-                </select>
+            <label for="isActive">Active</label>
+            <input type="checkbox" id="isActive-add" name="isActive">
 
-                <label for="isActive">Active</label>
-                <input type="checkbox" id="isActive-add" name="isActive">
-
-                <button style="display: block; margin: 20px auto; padding: 12px 20px;" type="submit">Add</button>
-            </form>
-        </div>
+            <button style="display: block; margin: 20px auto; padding: 12px 20px;" type="submit">Add</button>
+        </form>
     </div>
+</div>
+
 
     <!-- Modal for Editing Account -->
     <div id="edit-account-modal" class="modal" style="display: none;">

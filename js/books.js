@@ -63,12 +63,26 @@ async function filterBooks() {
     const categoryId = document.getElementById('category-filter').value;
 
     try {
+        // Fetching books based on selected category
         const response = await fetch(`${CONFIG.API_BASE_URL}books/category/${categoryId}`);
         if (!response.ok) {
             throw new Error('Failed to fetch books');
         }
         const books = await response.json();
-        console.log(books);
+
+        // Fetching categories to create categoryMap
+        const categoriesResponse = await fetch(`${CONFIG.API_BASE_URL}categories`);
+        if (!categoriesResponse.ok) {
+            throw new Error('Failed to fetch categories');
+        }
+        const categories = await categoriesResponse.json();
+
+        // Create category map from categoryId -> name
+        const categoryMap = {};
+        categories.forEach(category => {
+            categoryMap[category.categoryId] = category.name;
+        });
+
         const bookListElement = document.getElementById('book-list');
         bookListElement.innerHTML = ''; // Clear current list
 
@@ -80,6 +94,7 @@ async function filterBooks() {
                 <td>${book.author}</td>
                 <td>${book.price}</td>
                 <td>${book.quantity}</td>
+                <td>${categoryMap[book.categoryId] || "Unknown Category"}</td> <!-- Show category name -->
                 <td>
                     <button class="edit-btn" onclick="openEditBookModal('${book.bookId}')">Edit</button>
                     <button class="delete-btn" onclick="deleteBook('${book.bookId}')">Delete</button>
@@ -91,6 +106,7 @@ async function filterBooks() {
         console.error('Error filtering books:', error);
     }
 }
+
 
 // Hàm thêm sách mới
 async function addBook(bookData) {
