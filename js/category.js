@@ -185,3 +185,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load initial data
     fetchCategories();
 });
+
+// Navigation handling
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('href').replace('#', '');
+            
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Handle navigation based on clicked link
+            switch(page) {
+                case 'dashboard':
+                    window.location.href = 'Dashboard.html';
+                    break;
+                case 'admin':
+                    window.location.href = 'admin.html';
+                    break;
+                    case 'category':
+                    window.location.href = 'category.html';
+                    break;
+                case 'books':
+                    window.location.href = 'books.html';
+                    break;
+                case 'import':
+                    window.location.href = 'import.html';
+                    break;
+                case 'export':
+                    window.location.href = 'export.html';
+                    break;
+            }
+        });
+    });
+
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Clear localStorage
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = '../index.html';
+    });
+});

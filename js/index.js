@@ -1,3 +1,14 @@
+// Check for saved credentials when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const savedUsername = localStorage.getItem('savedUsername');
+    const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+    
+    if (savedRememberMe && savedUsername) {
+        document.getElementById('username').value = savedUsername;
+        document.getElementById('remember').checked = true;
+    }
+});
+
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -22,6 +33,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         const data = await response.json();
 
         if (response.ok) {
+            // Handle remember me
+            if (rememberMe) {
+                localStorage.setItem('savedUsername', username);
+                localStorage.setItem('rememberMe', 'true');
+            } else {
+                localStorage.removeItem('savedUsername');
+                localStorage.removeItem('rememberMe');
+            }
+
             // Store user data and role in localStorage
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
