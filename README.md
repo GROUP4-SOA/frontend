@@ -48,39 +48,42 @@
 
 ## 📁 Cấu trúc thư mục
 frontend/
-│
+│               
 ├── index.html               # Trang đăng nhập
-├── dashboard.html           # Trang chính sau khi đăng nhập
 │
-├── accounts.html            # Quản lý tài khoản (chỉ Admin)
-├── books.html               # Quản lý sách
-├── categories.html          # Quản lý danh mục sách
-├── imports.html             # Quản lý nhập kho
-├── exports.html             # Quản lý xuất kho
+├── pages/                      # Thư mục chứa các trang
+│   ├── admin.html               # Quản lý tài khoản (chỉ Admin)
+│   ├── books.html               # Quản lý sách
+│   ├── category.html            # Quản lý danh mục sách
+│   ├── Dashboard.html           # Giao diện báo cáo
+│   ├── imports.html             # Quản lý nhập kho
+│   ├── exports.html             # Quản lý xuất kho
 │
 ├── css/                     # Thư mục chứa các tệp định dạng CSS
-│   └── styles.css           # Tệp CSS chính dùng chung
+│   ├── book.css               
+│   ├── Dashboaed.css          
+│   ├── export.css               
+│   ├── import.css                
+│   ├── index.css                
+│   └── category.css             
 │
-├── js/                      # Thư mục chứa logic JavaScript
-│   ├── auth.js              # Xử lý đăng nhập và phân quyền
-│   ├── dashboard.js         # Xử lý hiển thị tổng quan kho
-│   ├── accounts.js          # Logic quản lý tài khoản
-│   ├── books.js             # Logic quản lý sách
-│   ├── categories.js        # Logic quản lý danh mục
-│   ├── imports.js           # Logic nhập kho
-│   ├── exports.js           # Logic xuất kho
-│   └── utils.js             # Các hàm tiện ích (gọi API, hiển thị toast, xử lý lỗi...)
+├── js/                          # Thư mục chứa logic JavaScript
+│   ├── admin.js                 # Logic quản lý tài khoản
+│   ├── book.js                  # Logic quản lý sách
+│   ├── Dashboaed.js             # Logic quản lý tài khoản
+│   ├── export.js                # Logic quản lý xuất kho
+│   ├── import.js                # Logic quản lý nhập kho
+│   ├── index.js                 # Logic Đăng nhập và phần quyền
+│   └── category.js              # Logic quản lý danh mục
 │
-├── assets/                  # Tài nguyên tĩnh như ảnh, icon
-│   ├── images/              # Hình ảnh minh họa (logo, banner,...)
-│   └── icons/               # Biểu tượng SVG hoặc PNG
-│
-└── README.md                # Tài liệu mô tả dự án (bạn đang đọc)
+├── images/                      # Tài nguyên tĩnh như ảnh, icon
+│  
+└── README.md                    # Tài liệu mô tả dự án
 
 ## 🚀 Hướng dẫn chạy dự án
 
 1. **Khởi động backend**
-   - Đảm bảo backend Minimal API đang chạy tại ví dụ: `https://localhost:5001`
+   - Backend đã được deloy bằng render: https://bookstore-api-latest-h38r.onrender.com/swagger/index.html
 
 2. **Cấu hình URL API**
    - Trong các file Config.js, cập nhật `baseUrl` để trỏ tới địa chỉ backend phù hợp.
