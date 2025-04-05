@@ -193,6 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'admin':
                     window.location.href = 'admin.html';
                     break;
+                    case 'category':
+                    window.location.href = 'category.html';
+                    break;
                 case 'books':
                     window.location.href = 'books.html';
                     break;
@@ -214,6 +217,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // Redirect to login page
         window.location.href = '../index.html';
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check user role and hide admin link
+    const userRole = localStorage.getItem('role');
+    const adminLink = document.getElementById('admin-link').parentElement;
+    
+    // Hide admin link for non-administrators
+    if (userRole !== '0' && userRole !== 'ADMINISTRATOR') {
+        adminLink.style.display = 'none';
+    }
+
+    // Prevent non-admin access
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href') === '#admin' && 
+                (userRole !== '0' && userRole !== 'ADMINISTRATOR')) {
+                e.preventDefault();
+                alert('Access denied. Administrator privileges required.');
+                return;
+            }
+        });
+    });
+
+    // Verify login status
+    if (!localStorage.getItem('token')) {
+        window.location.href = '../index.html';
+        return;
+    }
 });
 
 // Gọi hàm lấy danh sách sách khi trang được tải

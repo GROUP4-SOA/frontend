@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'admin':
                     window.location.href = 'admin.html';
                     break;
+                    case 'category':
+                    window.location.href = 'category.html';
+                    break;
                 case 'books':
                     window.location.href = 'books.html';
                     break;
@@ -132,5 +135,57 @@ document.getElementById("logout-btn").addEventListener("click", function(event) 
     event.preventDefault();
     if (confirm("Are you sure you want to log out?")) {
         window.location.href = "login.html";
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get user role once
+    const userRole = localStorage.getItem('role');
+    console.log('Current user role:', userRole); // Debug log
+    
+    // Handle admin link visibility
+    const adminLink = document.getElementById('admin-link').parentElement;
+    if (userRole === '0' || userRole === 'ADMINISTRATOR') {
+        adminLink.style.display = 'block';
+    } else {
+        adminLink.style.display = 'none';
+    }
+
+    // Setup navigation with role check
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('href').replace('#', '');
+
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+
+            // Handle navigation with role check
+            if (page === 'admin') {
+                if (userRole === '0' || userRole === 'ADMINISTRATOR') {
+                    window.location.href = 'admin.html';
+                } else {
+                    alert('Access denied. Administrator privileges required.');
+                }
+            } else {
+                window.location.href = `${page}.html`;
+            }
+        });
+    });
+
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.clear();
+        window.location.href = '../index.html';
+    });
+
+    // Verify login status
+    if (!localStorage.getItem('token')) {
+        window.location.href = '../index.html';
+        return;
     }
 });

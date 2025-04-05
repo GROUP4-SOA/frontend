@@ -22,13 +22,14 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         const data = await response.json();
 
         if (response.ok) {
-            // Store user data in localStorage
+            // Store user data and role in localStorage
             localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.userId);
             localStorage.setItem('username', data.username);
+            localStorage.setItem('role', data.role); // This should be 'ADMINISTRATOR' or 'STAFF'
             
             // Redirect to Dashboard
-            window.location.href = '../pages/Dashboard.html';
+            window.location.href = 'pages/Dashboard.html';
         } else {
             errorMessage.textContent = data.message || 'Invalid credentials';
             errorMessage.style.display = 'block';

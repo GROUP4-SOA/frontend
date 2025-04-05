@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management</title>
+    <link rel="icon" type="image/x-icon" href="../image/warehouse.svg">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Book Warehouse Management</h2>
+        <ul>
+            <li><a href="#dashboard" class="nav-link" id="dashboard-link"><i class="fa-solid fa-home"></i> Dashboard</a></li>
+            <li><a href="#admin" class="nav-link" id="admin-link"><i class="fa-solid fa-user"></i> Account Management</a></li>
+            <li><a href="#category" class="nav-link active" id="category-link"><i class="fa-solid fa-list"></i> Category Management</a></li>
+            <li><a href="#books" class="nav-link" id="books-link"><i class="fa-solid fa-book"></i> Book Management</a></li>
+            <li><a href="#import" class="nav-link" id="import-link"><i class="fa-solid fa-download"></i> Warehouse Import</a></li>
+            <li><a href="#export" class="nav-link" id="export-link"><i class="fa-solid fa-upload"></i> Warehouse Export</a></li>
+        </ul>
+        <a href="#" id="logout-btn"><i class="fa-solid fa-sign-out-alt"></i> Log Out</a>
+    </div>
+
+    <div class="content" id="content">
+        <h2>Category Management</h2>
+        <button class="add-btn" onclick="openAddCategoryModal()">Add Category</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="category-list">
+                <!-- Category list will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Adding Category -->
+    <div id="add-category-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Add Category</h2>
+            <form id="add-category-form">
+                <label for="name">Category Name</label>
+                <input type="text" id="name-add" name="name" required>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Editing Category -->
+    <div id="edit-category-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Edit Category</h2>
+            <form id="edit-category-form">
+                <input type="hidden" id="categoryId-edit" name="categoryId">
+                <label for="name-edit">Category Name</label>
+                <input type="text" id="name-edit" name="name" required>
+                <button type="submit">Update</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../config.js"></script>
+    <script src="../js/category.js"></script>
+</body>
+</html>
