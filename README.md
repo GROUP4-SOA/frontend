@@ -1,6 +1,7 @@
 # Quản lý Cửa hàng Sách -Frontend (Bookstore Inventory)
 
 Đây là giao diện người dùng (frontend) đơn giản được xây dựng bằng **HTML**, **CSS** và **JavaScript thuần** để kết nối với backend  **Minimal API (.NET 8)** cho hệ thống **quản lý kho**.
+https://group4-soa.github.io/frontend/
 
 ## 🌟 Chức năng chính
 
