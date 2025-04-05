@@ -1,12 +1,38 @@
 // Kiểm tra xem CONFIG đã được load chưa
 console.log("API URL:", CONFIG.API_BASE_URL);
 
-
-// Hàm lấy danh sách sách
+// Hàm lấy danh sách sách và categories cùng lúc
 async function fetchBooks() {
     try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}books`);
-        const books = await response.json();
+        // Fetch books và categories cùng lúc
+        const [booksResponse, categoriesResponse] = await Promise.all([
+            fetch(`${CONFIG.API_BASE_URL}books`),
+            fetch(`${CONFIG.API_BASE_URL}categories`)  // Fetching the categories
+        ]);
+
+        if (!booksResponse.ok || !categoriesResponse.ok) {
+            throw new Error('Failed to fetch data');
+        }
+
+        const books = await booksResponse.json();
+        const categories = await categoriesResponse.json();
+
+        // Tạo map từ categoryId -> name
+        const categoryMap = {};
+        categories.forEach(category => {
+            categoryMap[category.categoryId] = category.name;
+        });
+
+        // Cập nhật các tùy chọn lọc category
+        const categoryFilter = document.getElementById('category-filter');
+        categoryFilter.innerHTML = '<option value="all">All</option>'; // Clear current options
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.categoryId;
+            option.textContent = category.name;
+            categoryFilter.appendChild(option);
+        });
 
         const bookListElement = document.getElementById('book-list');
         bookListElement.innerHTML = ''; // Clear current list
@@ -19,7 +45,7 @@ async function fetchBooks() {
                 <td>${book.author}</td>
                 <td>${book.price}</td>
                 <td>${book.quantity}</td>
-                <td>${book.categoryId}</td>
+                <td>${categoryMap[book.categoryId] || "Unknown Category"}</td> <!-- Show category name instead of ID -->
                 <td>
                     <button class="edit-btn" onclick="openEditBookModal('${book.bookId}')">Edit</button>
                     <button class="delete-btn" onclick="deleteBook('${book.bookId}')">Delete</button>
@@ -29,6 +55,40 @@ async function fetchBooks() {
         });
     } catch (error) {
         console.error('Error fetching books:', error);
+    }
+}
+
+// Hàm lọc sách theo category và các filter khác
+async function filterBooks() {
+    const categoryId = document.getElementById('category-filter').value;
+
+    try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}books/category/${categoryId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch books');
+        }
+        const books = await response.json();
+        console.log(books);
+        const bookListElement = document.getElementById('book-list');
+        bookListElement.innerHTML = ''; // Clear current list
+
+        books.forEach(book => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${book.bookId}</td>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.price}</td>
+                <td>${book.quantity}</td>
+                <td>
+                    <button class="edit-btn" onclick="openEditBookModal('${book.bookId}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteBook('${book.bookId}')">Delete</button>
+                </td>
+            `;
+            bookListElement.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error filtering books:', error);
     }
 }
 
@@ -70,29 +130,6 @@ async function updateBook(bookId, bookData) {
         alert('Lỗi khi cập nhật sách!');
     }
 }
-
-// Hàm xóa sách
-async function deleteBook(bookId) {
-    try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}books/${bookId}`, {
-            method: 'DELETE',
-        });
-
-        if (!response.ok) throw new Error('Failed to delete book');
-        alert('Xóa sách thành công!');
-        fetchBooks();
-    } catch (error) {
-        console.error('Lỗi khi xóa sách:', error);
-        alert('Lỗi khi xóa sách!');
-    }
-}
-
-// Hàm mở modal thêm sách
-function openAddBookModal() {
-    const modal = document.getElementById('add-book-modal');
-    modal.style.display = 'block';
-}
-
 // Hàm mở modal chỉnh sửa sách
 function openEditBookModal(bookId) {
     fetch(`${CONFIG.API_BASE_URL}books/${bookId}`)
@@ -109,6 +146,38 @@ function openEditBookModal(bookId) {
             document.getElementById('edit-category').value = book.categoryId;
         });
 }
+
+// Hàm xóa sách với xác nhận
+async function deleteBook(bookId) {
+    // Hiển thị hộp thoại xác nhận trước khi xóa
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sách này?");
+    
+    if (confirmDelete) {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}books/${bookId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) throw new Error('Failed to delete book');
+            alert('Xóa sách thành công!');
+            fetchBooks();
+        } catch (error) {
+            console.error('Lỗi khi xóa sách:', error);
+            alert('Lỗi khi xóa sách!');
+        }
+    } else {
+        // Nếu người dùng không xác nhận, không làm gì cả
+        console.log('Xóa sách bị hủy');
+    }
+}
+
+
+// Hàm mở modal thêm sách
+function openAddBookModal() {
+    const modal = document.getElementById('add-book-modal');
+    modal.style.display = 'block';
+}
+
 
 // Hàm đóng modal
 function closeModal() {

@@ -71,10 +71,9 @@ async function fetchUsers() {
 
         const users = await response.json();
         console.log('Users:', users); // Debug log
-
-        const accountList = document.getElementById('account-list');
+   const accountList = document.getElementById('account-list');
         accountList.innerHTML = ''; // Clear existing rows
-        
+
         users.forEach(user => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -120,19 +119,22 @@ async function addUser(user) {
 // Cập nhật người dùng
 async function updateUser(userId, updatedUser) {
     try {
-        const response = await fetch(CONFIG.API_BASE_URL + `auth/${userId}`, {
+        const response = await fetch(CONFIG.API_BASE_URL + `auth/${userId}`, {  // Chỉnh sửa API URL
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(updatedUser),
         });
-        const updatedUserData = await response.json();
-        fetchUsers(); // Refresh the user list
+        if (!response.ok) throw new Error('Failed to update user');
+        alert('Cập nhật sách thành công!');
+        fetchUser();
     } catch (error) {
         console.error('Error updating user:', error);
+        alert('Đã xảy ra lỗi khi cập nhật người dùng.');
     }
 }
+
 
 // Xóa người dùng
 async function deleteUser(userId) {
@@ -170,7 +172,6 @@ async function deleteUser(userId) {
     }
 }
 
-
 // Mở modal thêm người dùng
 function openAddAccountModal() {
     const modal = document.getElementById('add-account-modal');
@@ -179,23 +180,13 @@ function openAddAccountModal() {
 
 // Mở modal sửa thông tin người dùng
 function openEditAccountModal(userId) {
-    const modal = document.getElementById('edit-account-modal');
-    
-    // Kiểm tra modal có tồn tại không
-    if (!modal) {
-        console.error('Modal Edit không tồn tại!');
-        return;
-    }
+    fetch(CONFIG.API_BASE_URL + `auth/${userId}`)
+        .then(response => response.json())
+        .then(user => {
+            const modal = document.getElementById('edit-account-modal');
+            modal.style.display = 'block';
 
-    // Lấy thông tin user từ danh sách hiện tại
-    const user = findUserById(userId);
-    
-    if (!user) {
-        console.error('Không tìm thấy người dùng với ID:', userId);
-        return;
-    }
-
-    // Điền dữ liệu vào form
+            d// Điền dữ liệu vào form
     document.getElementById('userId-edit').value = user.userId;
     document.getElementById('username-edit').value = user.username;
     document.getElementById('fullName-edit').value = user.fullName;
@@ -203,9 +194,7 @@ function openEditAccountModal(userId) {
     document.getElementById('phone-edit').value = user.phoneNo;
     document.getElementById('role-edit').value = user.role;
     document.getElementById('isActive-edit').checked = user.isActive;
-
-    // Hiển thị modal
-    modal.style.display = 'block';
+        });
 }
 // Hàm tìm user theo ID
 function findUserById(userId) {
@@ -227,8 +216,8 @@ function findUserById(userId) {
 }
 // Đóng modal
 function closeModal() {
-    const modal = document.querySelectorAll('.modal-content');
-    modal.forEach(modal => modal.parentElement.style.display = 'none');
+    const modal = document.querySelectorAll('.modal');
+    modal.forEach(modal => modal.style.display = 'none');
 }
 // Sự kiện gửi form để thêm người dùng
 document.getElementById('add-account-form').addEventListener('submit', function (e) {
@@ -244,6 +233,7 @@ document.getElementById('add-account-form').addEventListener('submit', function 
     addUser(user);
     closeModal();
 });
+
 
 // Sự kiện gửi form sửa người dùng
 document.getElementById('edit-account-form').addEventListener('submit', function (e) {
@@ -262,4 +252,77 @@ document.getElementById('edit-account-form').addEventListener('submit', function
     updateUser(userId, updatedUser);
     closeModal();
 });
+
+
+//NavigationNavigation
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("admin-link").classList.add("active");
+
+    document.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const page = this.getAttribute("href").substring(1);
+
+            if (page === "admin") {
+                location.reload();
+            } else {
+                loadPage(page);
+            }
+
+            // Cập nhật class active
+            document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+            this.classList.add("active");
+        });
+    });
+});
+
+// Navigation handling
+document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const page = this.getAttribute('href').replace('#', '');
+
+            // Remove active class from all links
+            navLinks.forEach(link => link.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+
+            // Handle navigation based on clicked link
+            switch (page) {
+                case 'dashboard':
+                    window.location.href = 'Dashboard.html';
+                    break;
+                case 'admin':
+                    window.location.href = 'admin.html';
+                    break;
+                case 'books':
+                    window.location.href = 'books.html';
+                    break;
+                case 'import':
+                    window.location.href = 'import.html';
+                    break;
+                case 'export':
+                    window.location.href = 'export.html';
+                    break;
+            }
+        });
+    });
+
+    // Handle logout
+    document.getElementById('logout-btn').addEventListener('click', function (e) {
+        e.preventDefault();
+        // Clear localStorage
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = '../index.html';
+    });
+});
+
+// Lấy danh sách người dùng khi tải trang
+window.onload = function () {
+    fetchUsers();
+};
 
