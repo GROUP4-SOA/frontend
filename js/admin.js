@@ -87,7 +87,7 @@ async function fetchUsers() {
                 <td>
                     <button class="edit-btn" onclick="openEditAccountModal('${user.userId}')">Edit</button>
                     <button class="delete-btn" onclick="deleteUser('${user.userId}')">
-                        ${user.isActive ? 'Disable' : 'Enable'}
+                        Disable
                     </button>
                 </td>
             `;
@@ -123,21 +123,26 @@ async function addUser(user) {
 }
 
 // Cập nhật người dùng
-async function updateUser(userId, updatedUser) {
+async function updateAccount(userId, accountData) {
     try {
-        const response = await fetch(CONFIG.API_BASE_URL + `auth/${userId}`, {  // Chỉnh sửa API URL
+        const response = await fetch(`${CONFIG.API_BASE_URL}auth/${userId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedUser),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(accountData)
         });
-        if (!response.ok) throw new Error('Failed to update user');
-        alert('Cập nhật sách thành công!');
-        fetchUser();
+
+        if (!response.ok) {
+            const errorData = await response.json(); // Lấy thông tin lỗi từ API nếu có
+            console.error('Failed to update account:', errorData);
+            alert('Failed to update account. ' + errorData.message);
+            return;
+        }
+
+        alert('Cập nhật tài khoản thành công!');
+        fetchUsers(); // Làm mới danh sách người dùng
     } catch (error) {
-        console.error('Error updating user:', error);
-        alert('Đã xảy ra lỗi khi cập nhật người dùng.');
+        console.error('Lỗi khi cập nhật tài khoản:', error);
+        alert('Lỗi khi cập nhật tài khoản!');
     }
 }
 
@@ -149,19 +154,19 @@ async function deleteUser(userId) {
 
     // Nếu không tìm thấy user
     if (!user) {
-        console.error('Không tìm thấy người dùng.');
+        console.error('Don\'t find user.');
         return;
     }
 
     // Nếu user đã bị vô hiệu hóa
     if (user.isActive = false) {
-        alert("Người dùng đã bị vô hiệu hóa.");
+        alert("User has been deactivated.");
         console.log("User:", user);
         return;
     }
     
     // Xác nhận trước khi vô hiệu hóa
-    const confirmDelete = confirm("Bạn có chắc muốn vô hiệu hóa người dùng này?");
+    const confirmDelete = confirm("Are you sure want to deactivate this user?");
     if (!confirmDelete) return;
 
     try {
@@ -186,23 +191,22 @@ function openAddAccountModal() {
 }
 
 // Mở modal sửa thông tin người dùng
-function openEditAccountModal(userId) {
-    fetch(CONFIG.API_BASE_URL + `auth/${userId}`)
-        .then(response => response.json())
-        .then(user => {
-            const modal = document.getElementById('edit-account-modal');
-            modal.style.display = 'block';
 
-            // Điền dữ liệu vào form
-    document.getElementById('userId-edit').value = user.userId;
-    document.getElementById('username-edit').value = user.username;
-    document.getElementById('fullName-edit').value = user.fullName;
-    document.getElementById('email-edit').value = user.email;
-    document.getElementById('phone-edit').value = user.phoneNo;
-    document.getElementById('role-edit').value = user.role;
-    document.getElementById('isActive-edit').checked = user.isActive;
-        });
+function openEditAccountModal(userId) {
+    const modal = document.getElementById('edit-account-modal');
+    modal.style.display = 'block';
+
+    // Điền sẵn thông tin mặc định (hoặc để trống) vào các trường trong form
+    document.getElementById('userId-edit').value = userId; // Lưu trữ userId trong form
+    document.getElementById('username-edit').value = '';  // Để trống (hoặc điền sẵn nếu cần)
+    document.getElementById('fullName-edit').value = '';  // Để trống
+    document.getElementById('email-edit').value = '';     // Để trống
+    document.getElementById('phone-edit').value = '';     // Để trống
+    document.getElementById('role-edit').value = '';      // Để trống
+    document.getElementById('isActive-edit').checked = false; // Để mặc định chưa kích hoạt
 }
+
+
 // Hàm tìm user theo ID
 function findUserById(userId) {
     const rows = document.querySelectorAll("#account-list tr");
@@ -223,9 +227,12 @@ function findUserById(userId) {
 }
 // Đóng modal
 function closeModal() {
-    const modal = document.querySelectorAll('.modal');
-    modal.forEach(modal => modal.style.display = 'none');
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => modal.style.display = 'none');
+    fetchUsers(); // Refresh the account list after closing the modal
 }
+
+
 // Sự kiện gửi form để thêm người dùng
 document.getElementById('add-account-form').addEventListener('submit', function (e) {
     e.preventDefault(); // Ngừng hành động mặc định của form
@@ -249,21 +256,28 @@ document.getElementById('add-account-form').addEventListener('submit', function 
 });
 
 
-// Sự kiện gửi form sửa người dùng
+// Sự kiện gửi form để thêm hoặc sửa người dùng
 document.getElementById('edit-account-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    const userId = e.target.userId.value;
-    const updatedUser = {
-        fullName: e.target.fullName.value,
-        username: e.target.username.value,
-        email: e.target.email.value,
-        phoneNo: e.target.phone.value,
-        role: e.target.role.value,
-        isActive: e.target.isActive.checked  // Đảm bảo lấy giá trị đúng
-    };
 
-    console.log("Updating user:", userId, updatedUser); // Kiểm tra dữ liệu trước khi gửi API
-    updateUser(userId, updatedUser);
+    const userId = e.target.userId.value;
+
+    // Kiểm tra nếu role không phải là một số hợp lệ, bạn có thể gán giá trị mặc định
+    if (isNaN(role)) {
+        alert('Role phải là một số hợp lệ!');
+        return;
+    }
+
+    const accountData = {
+        username: e.target.username.value,   // Đảm bảo tên trường đúng với API yêu cầu
+        password: e.target.password.value,   // Thêm mật khẩu
+        fullName: e.target.fullName.value,
+        email: e.target.email.value,
+        phoneNo: e.target.phone.value,      // Dùng phoneNo thay vì PhoneNo
+        role: parseInt(e.target.role.value),
+        isActive: e.target.isActive.checked  // Dùng .checked để lấy giá trị true/false cho checkbox
+    };
+    updateAccount(userId, accountData);
     closeModal();
 });
 
@@ -336,7 +350,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Lấy danh sách người dùng khi tải trang
-window.onload = function () {
-    fetchUsers();
-};
+window.onload =fetchUsers; 
 

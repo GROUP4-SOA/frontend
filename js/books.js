@@ -166,7 +166,7 @@ function openEditBookModal(bookId) {
 // Hàm xóa sách với xác nhận
 async function deleteBook(bookId) {
     // Hiển thị hộp thoại xác nhận trước khi xóa
-    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sách này?");
+    const confirmDelete = window.confirm("Are you sure want to delete this book?");
     
     if (confirmDelete) {
         try {
@@ -175,15 +175,15 @@ async function deleteBook(bookId) {
             });
 
             if (!response.ok) throw new Error('Failed to delete book');
-            alert('Xóa sách thành công!');
+            alert('Book deleted successfully!');
             fetchBooks();
         } catch (error) {
-            console.error('Lỗi khi xóa sách:', error);
-            alert('Lỗi khi xóa sách!');
+            console.error('error:', error);
+            alert('Failed to delete book!');
         }
     } else {
         // Nếu người dùng không xác nhận, không làm gì cả
-        console.log('Xóa sách bị hủy');
+        console.log('Cancel!');
     }
 }
 
